@@ -6,6 +6,7 @@ spring:
     name: app2-development-prototype-microservice
 # configuration for spring actuator
 management:
-  health:
-    probes:
-      enabled: true
+  web:
+    exposure:
+      include: health
+      exclude: "*"
