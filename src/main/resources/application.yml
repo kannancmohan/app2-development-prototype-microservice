@@ -1,0 +1,11 @@
+---
+server:
+  port: 8881
+spring:
+  application:
+    name: app2-development-prototype-microservice
+# configuration for spring actuator
+management:
+  health:
+    probes:
+      enabled: true
