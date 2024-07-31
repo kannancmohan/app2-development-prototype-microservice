@@ -21,7 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     error.setMessage(ex.getLocalizedMessage());
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
   }
-  
+
   @ExceptionHandler(value = {Exception.class})
   public final ResponseEntity<Error> handleGenericException(
       final Exception ex, final WebRequest request) {
@@ -31,5 +31,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     error.setMessage(ex.getLocalizedMessage());
     return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
   }
-
 }
