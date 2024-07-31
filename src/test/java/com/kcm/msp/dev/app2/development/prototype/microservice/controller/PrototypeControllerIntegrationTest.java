@@ -45,15 +45,12 @@ final class PrototypeControllerIntegrationTest {
 
   private static final String TEST_URL = "http://localhost:";
 
-  @LocalServerPort
-  int port;
+  @LocalServerPort int port;
 
-  @Autowired
-  TestRestTemplate restTemplate;
+  @Autowired TestRestTemplate restTemplate;
 
   // comment this and its references to do a real integration test
-  @MockBean
-  private PetService petService;
+  @MockBean private PetService petService;
 
   @Nested
   class TestGetPets {
@@ -63,12 +60,13 @@ final class PrototypeControllerIntegrationTest {
     void petsShouldReturnListOfPets() throws Exception {
       when(petService.listPets(any())).thenReturn(List.of(getPetInstance()));
       final URI uri = UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets").build().toUri();
-      final ResponseEntity<List<Pet>> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null,
-          new ParameterizedTypeReference<>() {
-          });
+      final ResponseEntity<List<Pet>> responseEntity =
+          restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
       assertNotNull(responseEntity);
       assertNotNull(responseEntity.getBody());
-      assertAll(() -> assertEquals(OK, responseEntity.getStatusCode()), () -> assertTrue(responseEntity.hasBody()),
+      assertAll(
+          () -> assertEquals(OK, responseEntity.getStatusCode()),
+          () -> assertTrue(responseEntity.hasBody()),
           () -> assertFalse(responseEntity.getBody().isEmpty()));
     }
 
@@ -81,9 +79,13 @@ final class PrototypeControllerIntegrationTest {
     @Test
     @DisplayName("GET /pets with invalid date should return BAD_REQUEST")
     void petsShouldReturnBadRequestForInvalidDate() {
-      final URI uri = UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets")
-          .queryParam("date-of-birth", "invalid_date").build().toUri();
-      final ResponseEntity<String> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null, String.class);
+      final URI uri =
+          UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets")
+              .queryParam("date-of-birth", "invalid_date")
+              .build()
+              .toUri();
+      final ResponseEntity<String> responseEntity =
+          restTemplate.exchange(uri, HttpMethod.GET, null, String.class);
       assertNotNull(responseEntity);
       assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
     }
@@ -93,9 +95,8 @@ final class PrototypeControllerIntegrationTest {
     void petsShouldReturnError() throws Exception {
       when(petService.listPets(any())).thenThrow(new RuntimeException("some error occurred"));
       final URI uri = UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets").build().toUri();
-      final ResponseEntity<Error> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null,
-          new ParameterizedTypeReference<>() {
-          });
+      final ResponseEntity<Error> responseEntity =
+          restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
       assertNotNull(responseEntity);
       assertEquals(INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
     }
@@ -108,24 +109,27 @@ final class PrototypeControllerIntegrationTest {
     @DisplayName("GET /pets/{petId} should return a pet")
     void showPetByIdShouldReturnPet() throws Exception {
       when(petService.showPetById(any())).thenReturn(getPetInstance());
-      final URI uri = UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets/123").build().toUri();
-      final ResponseEntity<Pet> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null,
-          new ParameterizedTypeReference<>() {
-          });
+      final URI uri =
+          UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets/123").build().toUri();
+      final ResponseEntity<Pet> responseEntity =
+          restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
       assertNotNull(responseEntity);
-      assertAll(() -> assertEquals(OK, responseEntity.getStatusCode()), () -> assertNotNull(responseEntity.getBody()));
+      assertAll(
+          () -> assertEquals(OK, responseEntity.getStatusCode()),
+          () -> assertNotNull(responseEntity.getBody()));
     }
 
     @Test
     @DisplayName("GET /pets/{petId} should return NOT_FOUND")
     void showPetByIdShouldReturnException() throws Exception {
       when(petService.showPetById(any())).thenThrow(new ItemNotFoundException("item not found"));
-      final URI uri = UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets/123").build().toUri();
-      final ResponseEntity<Error> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, null,
-          new ParameterizedTypeReference<>() {
-          });
+      final URI uri =
+          UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets/123").build().toUri();
+      final ResponseEntity<Error> responseEntity =
+          restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
       assertNotNull(responseEntity);
-      assertAll(() -> assertEquals(NOT_FOUND, responseEntity.getStatusCode()),
+      assertAll(
+          () -> assertEquals(NOT_FOUND, responseEntity.getStatusCode()),
           () -> assertNotNull(responseEntity.getBody()));
     }
   }
@@ -138,13 +142,20 @@ final class PrototypeControllerIntegrationTest {
     void petsShouldReturnAPet() throws Exception {
       when(petService.createPet(any())).thenReturn(getPetInstance());
       final URI uri = UriComponentsBuilder.fromHttpUrl(TEST_URL + port + "/pets").build().toUri();
-      final CreatePetRequest createPetRequest = new CreatePetRequest().name("petName").tag("petTag")
-          .dateOfBirth(LocalDate.now()).ownerEmail("test@test.com");
+      final CreatePetRequest createPetRequest =
+          new CreatePetRequest()
+              .name("petName")
+              .tag("petTag")
+              .dateOfBirth(LocalDate.now())
+              .ownerEmail("test@test.com");
       HttpEntity<CreatePetRequest> request = new HttpEntity<>(createPetRequest, new HttpHeaders());
-      final ResponseEntity<Pet> responseEntity = restTemplate.postForEntity(uri, request, Pet.class);
+      final ResponseEntity<Pet> responseEntity =
+          restTemplate.postForEntity(uri, request, Pet.class);
       assertNotNull(responseEntity);
       assertNotNull(responseEntity.getBody());
-      assertAll(() -> assertEquals(OK, responseEntity.getStatusCode()), () -> assertTrue(responseEntity.hasBody()),
+      assertAll(
+          () -> assertEquals(OK, responseEntity.getStatusCode()),
+          () -> assertTrue(responseEntity.hasBody()),
           () -> assertEquals("petName", responseEntity.getBody().getName()));
     }
 
