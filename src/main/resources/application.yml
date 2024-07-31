@@ -1,0 +1,12 @@
+---
+server:
+  port: 8881
+spring:
+  application:
+    name: app2-development-prototype-microservice
+# configuration for spring actuator
+management:
+  web:
+    exposure:
+      include: health
+      exclude: "*"

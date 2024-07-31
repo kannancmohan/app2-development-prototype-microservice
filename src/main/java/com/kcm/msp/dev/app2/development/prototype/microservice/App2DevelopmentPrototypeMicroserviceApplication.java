@@ -1,4 +1,4 @@
-package com.kcm.msp.dev.app2_development_prototype_microservice;
+package com.kcm.msp.dev.app2.development.prototype.microservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
