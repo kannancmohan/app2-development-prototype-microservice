@@ -55,7 +55,7 @@ final class PrototypeControllerIntegrationTest {
     @DisplayName("GET /pets should return list of pets")
     void petsShouldReturnListOfPets() throws Exception {
       when(petService.listPets(any())).thenReturn(List.of(getPetInstance()));
-      ResponseEntity<List<Pet>> responseEntity =
+      final ResponseEntity<List<Pet>> responseEntity =
           restClient
               .get()
               .uri(getBaseUrl() + "/pets")
@@ -87,7 +87,11 @@ final class PrototypeControllerIntegrationTest {
           assertThrows(
               HttpClientErrorException.class,
               () -> {
-                restClient.get().uri(uri).retrieve().toEntity(HttpClientErrorException.class);
+                restClient
+                    .get()
+                    .uri(uri)
+                    .retrieve()
+                    .toEntity(new ParameterizedTypeReference<>() {});
               });
       assertEquals(BAD_REQUEST, thrown.getStatusCode());
     }
@@ -104,7 +108,7 @@ final class PrototypeControllerIntegrationTest {
                     .get()
                     .uri(getBaseUrl() + "/pets")
                     .retrieve()
-                    .toEntity(HttpServerErrorException.class);
+                    .toEntity(new ParameterizedTypeReference<>() {});
               });
       assertEquals(INTERNAL_SERVER_ERROR, thrown.getStatusCode());
     }
@@ -117,7 +121,7 @@ final class PrototypeControllerIntegrationTest {
     @DisplayName("GET /pets/{petId} should return a pet")
     void showPetByIdShouldReturnPet() throws Exception {
       when(petService.showPetById(any())).thenReturn(getPetInstance());
-      ResponseEntity<Pet> responseEntity =
+      final ResponseEntity<Pet> responseEntity =
           restClient.get().uri(getBaseUrl() + "/pets/123").retrieve().toEntity(Pet.class);
       assertNotNull(responseEntity);
       assertAll(
@@ -133,11 +137,7 @@ final class PrototypeControllerIntegrationTest {
           assertThrows(
               HttpClientErrorException.class,
               () -> {
-                restClient
-                    .get()
-                    .uri(getBaseUrl() + "/pets/123")
-                    .retrieve()
-                    .toEntity(HttpClientErrorException.class);
+                restClient.get().uri(getBaseUrl() + "/pets/123").retrieve().toEntity(Pet.class);
               });
       assertEquals(NOT_FOUND, thrown.getStatusCode());
     }
