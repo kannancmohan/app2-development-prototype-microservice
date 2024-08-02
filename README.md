@@ -1,6 +1,7 @@
 # app-development-prototype-microservice
 
-        springboot3 microservice implementation using api first approach
+        Springboot3 microservice implementation using api first approach. 
+        Project uses OpenApi(openapi-generator-maven-plugin) to generate client and server stub for given openapi spec.
 
 ## supported versions
 
@@ -15,19 +16,50 @@
 Git commit should follow the [conventionalcommits](https://www.conventionalcommits.org/en/v1.0.0/#summary) convention
 There is a git pre-commit hook(commit-msg) configured to enforce this convention
 
-### Java code style:
+### Code style:
 
-should follow google java coding style and project uses spotless-maven-plugin to enforce this
+The project uses spotless-maven-plugin to enforce style check on the following
+* Java : Uses google java coding style
+* POM :  enforce style check on pom.xml
+* Markdown(*.md) : enforce style check on *.md files
+
+Execute './mvnw spotless:check' to view code style violations and use './mvnw spotless:apply' to  manually apply coding style
 
 ## Project IDE initial setup
 
-## Project setup
+//TODO
 
-        Add the following properties for genearting open-api client and server code 
-        1. generate-openapi-server-code.package  - for defining java package for the openapi generated server code
-        2. generate-openapi-client-code.package  - for defining java package for the openapi generated client code
+## Project Setup and Configuring
 
-## Build and Start the application
+### Setting the package name for the generated openapi client and server code
+
+Add the following properties to the pom.xml
+eg:
+
+```
+<generate-openapi-server-code.package>app2.development.prototype.microservice.server</generate-openapi-server-code.package>
+<generate-openapi-client-code.package>app2.development.prototype.microservice.client</generate-openapi-client-code.package>
+```
+
+### Disabling OpenApi Client/Server code generation
+
+Example for disabling client code generation, add the following in pom.xml
+
+```
+<plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <executions>
+                <!-- disable generation of openapi client code -->
+                <execution>
+                <id>generate-openapi-client-code</id>
+                <phase/>
+                </execution>
+        </executions>
+</plugin>
+```
+
+### Build and Start the application
 
         Build application 
             * ./mvnw clean install
