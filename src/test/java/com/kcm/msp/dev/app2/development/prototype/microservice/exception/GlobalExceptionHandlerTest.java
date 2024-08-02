@@ -6,11 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.Error;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 
 @Tag("UnitTest")
@@ -24,8 +22,8 @@ final class GlobalExceptionHandlerTest {
 
   @Test
   public void handleGenericException() {
-    final Exception exception = new RuntimeException("Error in application");
-    final ResponseEntity<Error> errorResponseEntity =
+    final var exception = new RuntimeException("Error in application");
+    final var errorResponseEntity =
         classUnderTest.handleGenericException(exception, mock(WebRequest.class));
     assertNotNull(errorResponseEntity);
     assertNotNull(errorResponseEntity.getBody());
@@ -35,8 +33,8 @@ final class GlobalExceptionHandlerTest {
 
   @Test
   public void handleInvalidInputException() {
-    final Exception exception = new ItemNotFoundException("item not found");
-    final ResponseEntity<Error> errorResponseEntity =
+    final var exception = new ItemNotFoundException("item not found");
+    final var errorResponseEntity =
         classUnderTest.handleItemNotFoundException(exception, mock(WebRequest.class));
     assertNotNull(errorResponseEntity);
     assertNotNull(errorResponseEntity.getBody());

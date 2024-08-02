@@ -14,10 +14,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(value = {ItemNotFoundException.class})
+  @ExceptionHandler(ItemNotFoundException.class)
   @ResponseBody
   public final ResponseEntity<Error> handleItemNotFoundException(
-      final Exception ex, final WebRequest request) {
+      final ItemNotFoundException ex, final WebRequest request) {
+    log.debug("Item not found {}", request.getContextPath(), ex);
     final Error error = new Error();
     error.setCode(HttpStatus.NOT_FOUND.getReasonPhrase());
     error.setMessage(ex.getLocalizedMessage());
