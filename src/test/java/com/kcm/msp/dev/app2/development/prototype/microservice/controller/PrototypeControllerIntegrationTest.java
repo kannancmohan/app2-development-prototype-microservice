@@ -58,7 +58,7 @@ final class PrototypeControllerIntegrationTest {
       final ResponseEntity<List<Pet>> responseEntity =
           restClient
               .get()
-              .uri(getBaseUrl() + "/pets")
+              .uri(getBaseUrl("/pets"))
               .retrieve()
               .toEntity(new ParameterizedTypeReference<>() {});
       assertNotNull(responseEntity);
@@ -79,7 +79,7 @@ final class PrototypeControllerIntegrationTest {
     @DisplayName("GET /pets with invalid date should return BAD_REQUEST")
     void petsShouldReturnBadRequestForInvalidDate() {
       final String uri =
-          UriComponentsBuilder.fromHttpUrl(getBaseUrl() + "/pets")
+          UriComponentsBuilder.fromHttpUrl(getBaseUrl("/pets"))
               .queryParam("date-of-birth", "invalid_date")
               .build()
               .toUriString();
@@ -106,7 +106,7 @@ final class PrototypeControllerIntegrationTest {
               () -> {
                 restClient
                     .get()
-                    .uri(getBaseUrl() + "/pets")
+                    .uri(getBaseUrl("/pets"))
                     .retrieve()
                     .toEntity(new ParameterizedTypeReference<>() {});
               });
@@ -122,7 +122,7 @@ final class PrototypeControllerIntegrationTest {
     void showPetByIdShouldReturnPet() throws Exception {
       when(petService.showPetById(any())).thenReturn(getPetInstance());
       final ResponseEntity<Pet> responseEntity =
-          restClient.get().uri(getBaseUrl() + "/pets/123").retrieve().toEntity(Pet.class);
+          restClient.get().uri(getBaseUrl("/pets/123")).retrieve().toEntity(Pet.class);
       assertNotNull(responseEntity);
       assertAll(
           () -> assertEquals(OK, responseEntity.getStatusCode()),
@@ -137,7 +137,7 @@ final class PrototypeControllerIntegrationTest {
           assertThrows(
               HttpClientErrorException.class,
               () -> {
-                restClient.get().uri(getBaseUrl() + "/pets/123").retrieve().toEntity(Pet.class);
+                restClient.get().uri(getBaseUrl("/pets/123")).retrieve().toEntity(Pet.class);
               });
       assertEquals(NOT_FOUND, thrown.getStatusCode());
     }
@@ -159,7 +159,7 @@ final class PrototypeControllerIntegrationTest {
       ResponseEntity<Pet> responseEntity =
           restClient
               .post()
-              .uri(getBaseUrl() + "/pets")
+              .uri(getBaseUrl("/pets"))
               .body(createPetRequest)
               .retrieve()
               .toEntity(Pet.class);
@@ -182,7 +182,7 @@ final class PrototypeControllerIntegrationTest {
     return new Pet().id(123L).name("petName").tag("petTag");
   }
 
-  private String getBaseUrl() {
-    return "http://localhost:" + port;
+  private String getBaseUrl(final String endpoint) {
+    return "http://localhost:" + port + endpoint;
   }
 }
