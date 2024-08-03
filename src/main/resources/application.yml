@@ -6,7 +6,8 @@ spring:
     name: app2-development-prototype-microservice
 # configuration for spring actuator
 management:
-  web:
-    exposure:
-      include: health
-      exclude: "*"
+  endpoints:
+    enabled-by-default: true # set to false to disable all endpoints
+    web:
+      exposure:
+        include: health,info,metrics
