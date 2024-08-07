@@ -5,7 +5,7 @@
 
 ## supported versions
 
-        java 22 -(Corretto-22.0.2.9.1)
+        java 21 -(Corretto-21.0.3.9.1)
         maven 3.5.4+ -(3.9.7)
         spring-boot 3.3.2
 
