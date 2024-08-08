@@ -14,7 +14,6 @@
   <description>Microservice prototype service</description>
 
   <properties>
-    <java.version>21</java.version>
     <revision>0.0.1-SNAPSHOT</revision>
     <!-- the package name for the openapi generated files-->
     <generate-openapi-server-code.package>app2.development.prototype.microservice.server</generate-openapi-server-code.package>
