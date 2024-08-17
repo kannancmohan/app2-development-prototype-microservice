@@ -61,15 +61,36 @@ Example for disabling client code generation, add the following in pom.xml
 
 ### Build and Start the application
 
-        Build application 
-            * ./mvnw clean install
-            * ./mvnw clean install -Dspotless.skip=true [To skip spotless check]
-            * ./mvnw clean install -Dskip.integration.test=true [To skip integration test]
-        Code Format
-            * ./mvnw spotless:check [To view check style violations]
-            * ./mvnw spotless:apply [To apply check style fix to files]
-        Run application using 
-            * ./mvnw spring-boot:run
+#### Build application
+
+```
+./mvnw clean install
+
+./mvnw clean install -Dspotless.skip=true # [To skip spotless check]
+
+./mvnw clean install -Dskip.integration.test=true # [To skip integration test]
+```
+
+#### Code Format
+
+```
+./mvnw spotless:check [To view check style violations]
+./mvnw spotless:apply [To apply check style fix to files]
+```
+
+#### Run application
+
+```
+./mvnw spring-boot:run
+```
+
+### Generate and Push Container Image
+
+```
+./mvnw clean install -U -Pjkube-build-push -Djkube.docker.username=<your-dockerhub-username> -Djkube.docker.password=<your-dockerhub-password>
+```
+
+eg: ./mvnw clean install -U -Pjkube-build-push -Djkube.docker.username=kannan2024 -Djkube.docker.password=1234
 
 ## OpenApi spec
 
