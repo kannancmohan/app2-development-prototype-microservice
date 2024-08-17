@@ -92,6 +92,13 @@ Example for disabling client code generation, add the following in pom.xml
 
 eg: ./mvnw clean install -U -Pjkube-build-push -Djkube.docker.username=kannan2024 -Djkube.docker.password=1234
 
+To manually pull and run container-image using docker
+
+```
+docker pull kannan2024/app2-development-prototype-microservice
+docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:latest 
+```
+
 ## OpenApi spec
 
         http://localhost:8881/v3/api-docs
