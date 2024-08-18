@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,10 @@ import org.springframework.http.ResponseEntity;
 @Tag("UnitTest")
 @ExtendWith(MockitoExtension.class)
 final class PrototypeControllerTest {
-  @Mock private PetService petService;
-  private PrototypeController classUnderTest;
 
-  @BeforeEach
-  void setUp() {
-    classUnderTest = new PrototypeController(petService);
-  }
+  @Mock private PetService petService;
+
+  @InjectMocks private PrototypeController classUnderTest;
 
   @Nested
   class TestGetPets {
