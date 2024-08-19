@@ -6,12 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.kcm.msp.dev.app2.development.prototype.microservice.controller.PrototypeController;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.web.client.RestClient;
@@ -38,26 +40,51 @@ final class App2DevelopmentPrototypeMicroserviceApplicationTests {
     assertTrue(true, "main method executed");
   }
 
-  @Test
-  public void testHealthEndpoint() {
-    final var response =
-        restClient.get().uri(getBaseUrl("/actuator/health")).retrieve().toEntity(String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertTrue(StringUtils.containsIgnoreCase(response.getBody(), "\"status\":\"UP\""));
+  // TODO move these test to a different test class
+  @Nested
+  class TestActuatorEndpoints {
+
+    @Test
+    public void testHealthEndpoint() {
+      final var response =
+          restClient.get().uri(getBaseUrl("/actuator/health")).retrieve().toEntity(String.class);
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+      assertTrue(StringUtils.containsIgnoreCase(response.getBody(), "\"status\":\"UP\""));
+    }
+
+    @Test
+    public void testInfoEndpoint() {
+      final var response =
+          restClient.get().uri(getBaseUrl("/actuator/info")).retrieve().toEntity(String.class);
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void testMetricsEndpoint() {
+      final var response =
+          restClient.get().uri(getBaseUrl("/actuator/metrics")).retrieve().toEntity(String.class);
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
   }
 
-  @Test
-  public void testInfoEndpoint() {
-    final var response =
-        restClient.get().uri(getBaseUrl("/actuator/info")).retrieve().toEntity(String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-  }
+  @Nested
+  class TestSecurityFilterChain {
 
-  @Test
-  public void testMetricsEndpoint() {
-    final var response =
-        restClient.get().uri(getBaseUrl("/actuator/metrics")).retrieve().toEntity(String.class);
-    assertEquals(HttpStatus.OK, response.getStatusCode());
+    @Autowired private ApplicationContext applicationContext;
+
+    @Test
+    public void accessingActuatorWithoutAuthentication_thenOk() {
+      final var response =
+          restClient.get().uri(getBaseUrl("/actuator/health")).retrieve().toBodilessEntity();
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void accessingPetsWithoutAuthentication_thenOk() {
+      final var response =
+          restClient.get().uri(getBaseUrl("/pets/123")).retrieve().toBodilessEntity();
+      assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
   }
 
   private String getBaseUrl(String endpoint) {

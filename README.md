@@ -111,3 +111,8 @@ docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:la
 
         http://localhost:8881/actuator/health
 
+## To completely disable springboot-security
+
+* Remove the "spring-boot-starter-security" from pom.xml
+* delete the SecurityConfig java
+
