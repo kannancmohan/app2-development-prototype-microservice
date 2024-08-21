@@ -59,7 +59,7 @@ public class SecurityConfig {
     return source;
   }
 
-  //TODO remove this
+  // TODO remove this
   @Bean
   public UserDetailsService userDetailsService() {
     InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
