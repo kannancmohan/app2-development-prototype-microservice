@@ -51,6 +51,30 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       security:
         - basic_auth: []
+    post:
+      summary: Create a user
+      operationId: createUsers
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        "200":
+          description: Created User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - basic_auth: []
   /pets:
     get:
       summary: List all pets
@@ -161,6 +185,17 @@ components:
       type: string
       format: date
       example: 2019-08-16
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: ^(?!\s*$).+ #string that are not empty
+          example: pluto
+        email:
+          $ref: "#/components/schemas/Email"
     CreatePetRequest:
       type: object
       required:
@@ -218,6 +253,8 @@ components:
           format: int64
         name:
           type: string
+        email:
+          $ref: "#/components/schemas/Email"
     Users:
       type: array
       items:
