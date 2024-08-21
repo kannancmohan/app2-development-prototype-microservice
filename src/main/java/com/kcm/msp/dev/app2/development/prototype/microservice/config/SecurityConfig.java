@@ -1,5 +1,8 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.config;
 
+import com.kcm.msp.dev.app2.development.prototype.microservice.properties.CorsProperty;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,16 +14,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity // comment this "To disable springboot-security"
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+  private final CorsProperty corsProperty;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
-        // .cors(c -> c.configurationSource(corsConfigurationSource()))
-        .cors(Customizer.withDefaults())
+        .cors(c -> c.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/actuator/**")
@@ -38,20 +46,20 @@ public class SecurityConfig {
     return http.build();
   }
 
-  // @Bean
-  // public CorsConfigurationSource corsConfigurationSource() {
-  //   CorsConfiguration configuration = new CorsConfiguration();
-  //   configuration.setAllowedOrigins(asList("http://localhost:8881"));
-  //   configuration.setAllowedMethods(asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-  //   configuration.setAllowCredentials(true);
-  //   configuration.setAllowedHeaders(asList("Authorization", "Content-Type"));
-  //   //configuration.setExposedHeaders(asList("Authorization"));
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of(corsProperty.getAllowedOrigins()));
+    configuration.setAllowedMethods(List.of(corsProperty.getAllowedMethods()));
+    configuration.setAllowedHeaders(List.of(corsProperty.getAllowedHeaders()));
+    configuration.setAllowCredentials(true);
+    // configuration.setExposedHeaders(asList("Authorization"));
+    final var source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
-  //   UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-  //   source.registerCorsConfiguration("/**", configuration);
-  //   return source;
-  // }
-
+  //TODO remove this
   @Bean
   public UserDetailsService userDetailsService() {
     InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
