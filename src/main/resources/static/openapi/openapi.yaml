@@ -25,6 +25,8 @@ paths:
       operationId: listUsers
       tags:
         - User
+      parameters:
+        - $ref: '#/components/parameters/limit'
       responses:
         "200":
           description: A paged array of users
