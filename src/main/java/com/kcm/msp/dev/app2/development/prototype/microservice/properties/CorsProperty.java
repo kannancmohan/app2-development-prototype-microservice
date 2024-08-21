@@ -1,5 +1,6 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.properties;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,7 +10,7 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 @AllArgsConstructor(onConstructor = @__(@ConstructorBinding))
 @Getter
 public class CorsProperty {
-  private final String allowedOrigins;
-  private final String allowedMethods;
-  private final String allowedHeaders;
+  private final List<String> allowedOrigins;
+  private final List<String> allowedMethods;
+  private final List<String> allowedHeaders;
 }

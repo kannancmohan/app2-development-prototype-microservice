@@ -1,7 +1,6 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.config;
 
 import com.kcm.msp.dev.app2.development.prototype.microservice.properties.CorsProperty;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,11 +48,10 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of(corsProperty.getAllowedOrigins()));
-    configuration.setAllowedMethods(List.of(corsProperty.getAllowedMethods()));
-    configuration.setAllowedHeaders(List.of(corsProperty.getAllowedHeaders()));
+    configuration.setAllowedOrigins(corsProperty.getAllowedOrigins());
+    configuration.setAllowedMethods(corsProperty.getAllowedMethods());
+    configuration.setAllowedHeaders(corsProperty.getAllowedHeaders());
     configuration.setAllowCredentials(true);
-    // configuration.setExposedHeaders(asList("Authorization"));
     final var source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;

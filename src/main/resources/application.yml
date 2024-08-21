@@ -8,9 +8,10 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 cors:
-  allowedOrigins: http://localhost:8881,https://localhost:8881,https://editor.swagger.io
-  allowedMethods: GET,POST,PUT,DELETE,OPTIONS
-  allowedHeaders: Authorization,Content-Type
+  # allowedOrigins: http://localhost:8881,https://localhost:8881,https://editor.swagger.io
+  allowedOrigins: [http://localhost:8881, https://localhost:8881, https://editor.swagger.io]
+  allowedMethods: [GET, POST, PUT, DELETE, OPTIONS]
+  allowedHeaders: [Authorization, Content-Type]
 ## configuration for spring actuator
 management:
   endpoints:
