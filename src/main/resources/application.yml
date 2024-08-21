@@ -4,7 +4,10 @@ server:
 spring:
   application:
     name: app2-development-prototype-microservice
-# configuration for spring actuator
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+## configuration for spring actuator
 management:
   endpoints:
     enabled-by-default: true # set to false to disable all endpoints
@@ -13,4 +16,7 @@ management:
         include: health,info,metrics
 logging:
   level:
-    org.springframework.boot.autoconfigure: WARN
+    org:
+      springframework:
+        boot.autoconfigure: WARN
+        security: WARN

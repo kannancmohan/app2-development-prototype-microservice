@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: 1.0.0
+  version: 2.0.0
   title: Swagger Petstore
   description: APIs for fetching pet related information
 
@@ -16,7 +16,39 @@ servers:
 tags:
   - name: Prototype
     description: Please use tags name starting with capitals
+  - name: User
+    description: Please use tags name starting with capitals
 paths:
+  /users:
+    get:
+      summary: List all users
+      operationId: listUsers
+      tags:
+        - User
+      responses:
+        "200":
+          description: A paged array of users
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - basic_auth: []
   /pets:
     get:
       summary: List all pets
@@ -173,6 +205,21 @@ components:
           type: string
         message:
           type: string
+    User:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    Users:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
   responses:
     NotFound:
       description: The specified resource was not found.
@@ -204,3 +251,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic

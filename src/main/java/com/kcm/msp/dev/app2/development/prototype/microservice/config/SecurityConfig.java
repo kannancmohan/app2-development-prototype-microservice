@@ -6,6 +6,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -15,6 +19,7 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
+        // .cors(c -> c.configurationSource(corsConfigurationSource()))
         .cors(Customizer.withDefaults())
         .authorizeHttpRequests(
             auth ->
@@ -22,8 +27,36 @@ public class SecurityConfig {
                     .permitAll() // permit all actuator
                     .requestMatchers("/pets/**")
                     .permitAll() // permit all pets request
+                    .requestMatchers("/v3/api-docs/**", "/v3/api-docs.yaml")
+                    .permitAll() // permit openapi spec
+                    .requestMatchers("/swagger-ui/**")
+                    .permitAll() // permit openapi spec
                     .anyRequest()
-                    .authenticated()); // any other request should be authenticated
+                    .authenticated())
+        // .rememberMe(Customizer.withDefaults())
+        .httpBasic(Customizer.withDefaults());
     return http.build();
+  }
+
+  // @Bean
+  // public CorsConfigurationSource corsConfigurationSource() {
+  //   CorsConfiguration configuration = new CorsConfiguration();
+  //   configuration.setAllowedOrigins(asList("http://localhost:8881"));
+  //   configuration.setAllowedMethods(asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+  //   configuration.setAllowCredentials(true);
+  //   configuration.setAllowedHeaders(asList("Authorization", "Content-Type"));
+  //   //configuration.setExposedHeaders(asList("Authorization"));
+
+  //   UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+  //   source.registerCorsConfiguration("/**", configuration);
+  //   return source;
+  // }
+
+  @Bean
+  public UserDetailsService userDetailsService() {
+    InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
+    UserDetails user = User.withUsername("kannan").password("{noop}kannan").build();
+    userDetailsService.createUser(user);
+    return userDetailsService;
   }
 }
