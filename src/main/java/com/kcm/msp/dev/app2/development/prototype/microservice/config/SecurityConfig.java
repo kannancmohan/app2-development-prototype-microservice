@@ -22,23 +22,21 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+  private static final String[] WHITELISTED_API_ENDPOINTS = {
+    "/pets/**", "/actuator/**", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**"
+  };
+
   private final CorsProperty corsProperty;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
+    http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs(like REST APIs)
         .cors(c -> c.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/actuator/**")
-                    .permitAll() // permit all actuator
-                    .requestMatchers("/pets/**")
-                    .permitAll() // permit all pets request
-                    .requestMatchers("/v3/api-docs/**", "/v3/api-docs.yaml")
-                    .permitAll() // permit openapi spec
-                    .requestMatchers("/swagger-ui/**")
-                    .permitAll() // permit openapi spec
-                    .anyRequest()
+                auth.requestMatchers(WHITELISTED_API_ENDPOINTS)
+                    .permitAll()
+                    .anyRequest() // authenticate remaining requests
                     .authenticated())
         // .rememberMe(Customizer.withDefaults())
         .httpBasic(Customizer.withDefaults());
