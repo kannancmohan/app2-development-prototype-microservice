@@ -1,5 +1,6 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.controller;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.kcm.msp.dev.app2.development.prototype.microservice.server.api.PrototypeApi;
@@ -34,6 +35,6 @@ public class PrototypeController implements PrototypeApi {
   @Override
   public ResponseEntity<Pet> createPets(final CreatePetRequest request) {
     final Pet pet = petService.createPet(request);
-    return ResponseEntity.status(OK).body(pet);
+    return ResponseEntity.status(CREATED).body(pet);
   }
 }

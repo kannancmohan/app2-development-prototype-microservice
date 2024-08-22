@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -166,7 +167,7 @@ final class PrototypeControllerIntegrationTest {
       assertNotNull(responseEntity);
       assertNotNull(responseEntity.getBody());
       assertAll(
-          () -> assertEquals(OK, responseEntity.getStatusCode()),
+          () -> assertEquals(CREATED, responseEntity.getStatusCode()),
           () -> assertTrue(responseEntity.hasBody()),
           () -> assertEquals("petName", responseEntity.getBody().getName()));
     }
