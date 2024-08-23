@@ -97,6 +97,10 @@ public class SecurityConfigIntegrationTest {
       assertEquals(HttpStatus.OK, response.getStatusCode());
       assertEquals(origin, response.getHeaders().getAccessControlAllowOrigin()); // TODO fix this
     }
+
+    @Test
+    @Disabled("TODO test cors with disallowed origin")
+    void testCorsDisallowedOrigin() {}
   }
 
   private String getBaseUrl(String endpoint) {
