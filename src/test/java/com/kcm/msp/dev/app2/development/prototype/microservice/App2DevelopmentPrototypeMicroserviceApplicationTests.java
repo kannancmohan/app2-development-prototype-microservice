@@ -14,18 +14,44 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.junit.jupiter.DisabledIf;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Tag("IntegrationTest")
 @DisabledIf(expression = "#{environment['skip.integration.test'] == 'true'}")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    webEnvironment = WebEnvironment.RANDOM_PORT,
+    properties = "spring.main.allow-bean-definition-overriding=true")
 final class App2DevelopmentPrototypeMicroserviceApplicationTests {
+
+  private static final String TEST_USER = "testuser";
+  private static final String TEST_USER_PWD = "testpassword";
+
+  @TestConfiguration
+  static class TestUserDetailsServiceConfig {
+
+    @Bean
+    @Primary // Mark this as the primary bean to override the existing UserDetailsService
+    public UserDetailsService userDetailsService() {
+      final var user =
+          User.withUsername(TEST_USER)
+              .password("{noop}" + TEST_USER_PWD) // {noop} indicates plain text password
+              .roles("USER")
+              .build();
+      return new InMemoryUserDetailsManager(user);
+    }
+  }
 
   @LocalServerPort private int port;
 
@@ -110,7 +136,7 @@ final class App2DevelopmentPrototypeMicroserviceApplicationTests {
               .accept(MediaType.APPLICATION_JSON)
               .headers(
                   header -> {
-                    header.setBasicAuth("kannan", "kannan");
+                    header.setBasicAuth(TEST_USER, TEST_USER_PWD);
                     header.setOrigin(origin);
                   })
               .retrieve()
