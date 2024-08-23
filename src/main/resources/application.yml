@@ -4,10 +4,23 @@ server:
 spring:
   application:
     name: app2-development-prototype-microservice
-# configuration for spring actuator
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+cors:
+  allowedOrigins: [http://localhost:8881, https://localhost:8881, https://editor.swagger.io]
+  allowedMethods: [GET, POST, PUT, DELETE, OPTIONS]
+  allowedHeaders: [Origin, Authorization, Content-Type]
+## configuration for spring actuator
 management:
   endpoints:
     enabled-by-default: true # set to false to disable all endpoints
     web:
       exposure:
         include: health,info,metrics
+logging:
+  level:
+    org:
+      springframework:
+        boot.autoconfigure: WARN
+        security: WARN

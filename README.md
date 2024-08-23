@@ -82,6 +82,8 @@ Example for disabling client code generation, add the following in pom.xml
 
 ```
 ./mvnw spring-boot:run
+# [Remote debugging]
+./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 ```
 
 ### Generate and Push Container Image
@@ -110,4 +112,10 @@ docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:la
 ## spring actuator
 
         http://localhost:8881/actuator/health
+
+## To completely disable springboot-security
+
+* Remove "spring-boot-starter-security" & "spring-security-test" from pom.xml
+* delete the SecurityConfig and SecurityConfigIntegrationTest
+* delete CorsProperty and its reference in class and application.xml
 

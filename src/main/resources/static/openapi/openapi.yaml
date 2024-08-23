@@ -16,7 +16,65 @@ servers:
 tags:
   - name: Prototype
     description: Please use tags name starting with capitals
+  - name: User
+    description: Please use tags name starting with capitals
 paths:
+  /users:
+    get:
+      summary: List all users
+      operationId: listUsers
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/limit'
+      responses:
+        "200":
+          description: A paged array of users
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - basic_auth: []
+    post:
+      summary: Create a user
+      operationId: createUsers
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        "200":
+          description: Created User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - basic_auth: []
   /pets:
     get:
       summary: List all pets
@@ -127,6 +185,17 @@ components:
       type: string
       format: date
       example: 2019-08-16
+    CreateUserRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          pattern: ^(?!\s*$).+ #string that are not empty
+          example: pluto
+        email:
+          $ref: "#/components/schemas/Email"
     CreatePetRequest:
       type: object
       required:
@@ -173,6 +242,23 @@ components:
           type: string
         message:
           type: string
+    User:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          $ref: "#/components/schemas/Email"
+    Users:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
   responses:
     NotFound:
       description: The specified resource was not found.
@@ -204,3 +290,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic
