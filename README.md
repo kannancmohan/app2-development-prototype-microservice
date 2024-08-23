@@ -115,7 +115,7 @@ docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:la
 
 ## To completely disable springboot-security
 
-* Remove the "spring-boot-starter-security" from pom.xml
-* delete the SecurityConfig java
+* Remove "spring-boot-starter-security" & "spring-security-test" from pom.xml
+* delete the SecurityConfig and SecurityConfigIntegrationTest
 * delete CorsProperty and its reference in class and application.xml
 

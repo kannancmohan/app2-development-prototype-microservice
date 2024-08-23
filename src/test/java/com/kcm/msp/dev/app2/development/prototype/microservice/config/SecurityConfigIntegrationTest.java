@@ -2,6 +2,8 @@ package com.kcm.msp.dev.app2.development.prototype.microservice.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -18,7 +20,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -71,7 +72,7 @@ public class SecurityConfigIntegrationTest {
               () -> {
                 restClient.get().uri(getBaseUrl("/users")).retrieve().toBodilessEntity();
               });
-      assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+      assertEquals(UNAUTHORIZED, exception.getStatusCode());
     }
   }
 
@@ -86,7 +87,7 @@ public class SecurityConfigIntegrationTest {
           restClient
               .get()
               .uri(getBaseUrl("/users"))
-              .accept(MediaType.APPLICATION_JSON)
+              .accept(APPLICATION_JSON)
               .headers(
                   header -> {
                     header.setBasicAuth(TEST_USER, TEST_USER_PWD);
