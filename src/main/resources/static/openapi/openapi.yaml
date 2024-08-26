@@ -51,6 +51,7 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       security:
         - basic_auth: []
+        - bearer_auth: []
     post:
       summary: Create a user
       operationId: createUsers
@@ -75,6 +76,7 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       security:
         - basic_auth: []
+        - bearer_auth: []
   /pets:
     get:
       summary: List all pets
@@ -294,3 +296,7 @@ components:
     basic_auth:
       type: http
       scheme: basic
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
