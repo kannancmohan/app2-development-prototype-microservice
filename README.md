@@ -119,3 +119,60 @@ docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:la
 * delete the SecurityConfig and SecurityConfigIntegrationTest
 * delete CorsProperty and its reference in class and application.xml
 
+## Keycloak setup (optional) for manual test
+
+### Install keycloak(version: 25.0.4)
+
+```
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.4 start-dev
+```
+
+### Configure Keycloak
+
+#### Create a Realm
+
+* In the [Keycloak Admin Console](http://localhost:8080/admin) , click on "Create Realm" and give it a name (e.g., app2-realm).
+
+#### Create a Client(Clients are applications and services that can request authentication of a user)
+
+* Go to the Clients section and click on "Create"
+* Set the Client ID (e.g., app2-client), Client Protocol to openid-connect
+* Set the Authentication flow. select "Standard Flow" and "Direct access grants"
+
+#### create roles necessary for the project
+
+* Go to "Realm Roles" section and click on "Create role"
+* create roles (e.g., app2admin-role, app2user-role)
+
+#### Create Users and Assign Roles
+
+* Go to the Users section and create users(test-user,test-admin).
+* Assign appropriate roles to the newly created users by editing the user, going to the Role Mappings tab, and assigning the appropriate role(s)
+
+#### Check user login
+
+* Login to [Keycloak Account console](http://localhost:8080/realms/app2-realm/account)
+
+### Manually check authentication and authorization
+
+#### Generate access token
+
+```
+curl --location --request POST 'http://localhost:8080/realms/app2-realm/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'username=test-user' \
+--data-urlencode 'password=test-user' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'client_id=app2-client'
+```
+
+#### Access restricted endpoint using bearer token
+
+```
+curl -X 'GET' \
+  'http://localhost:8881/users?limit=10' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <access-token>'
+
+```
+

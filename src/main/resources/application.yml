@@ -4,9 +4,15 @@ server:
 spring:
   application:
     name: app2-development-prototype-microservice
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
+          jwk-set-uri:  ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
 cors:
   allowedOrigins: [http://localhost:8881, https://localhost:8881, https://editor.swagger.io]
   allowedMethods: [GET, POST, PUT, DELETE, OPTIONS]
@@ -24,3 +30,7 @@ logging:
       springframework:
         boot.autoconfigure: WARN
         security: WARN
+# custom properties
+keycloak:
+  realm: app2-realm
+  host: http://192.168.0.30:8080

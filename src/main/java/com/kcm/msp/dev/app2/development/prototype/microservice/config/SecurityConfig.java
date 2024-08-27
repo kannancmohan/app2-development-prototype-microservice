@@ -38,7 +38,13 @@ public class SecurityConfig {
                     .permitAll()
                     .anyRequest() // authenticate remaining requests
                     .authenticated())
-        // .rememberMe(Customizer.withDefaults())
+        // .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+        // Add the Bearer Token filter
+        /*        .oauth2ResourceServer(
+        oauth2 ->
+            oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))*/
+        .oauth2ResourceServer(
+            oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()))
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }
@@ -54,6 +60,16 @@ public class SecurityConfig {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
+
+  //  private JwtAuthenticationConverter jwtAuthenticationConverter() {
+  //    JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
+  //    /*    converter.setAuthoritiesClaimName("roles");
+  //    converter.setAuthorityPrefix("ROLE_");*/
+  //
+  //    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+  //    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(converter);
+  //    return jwtAuthenticationConverter;
+  //  }
 
   // TODO remove this
   @Bean
