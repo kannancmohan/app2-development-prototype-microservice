@@ -131,27 +131,28 @@ docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin
 
 #### Create a Realm
 
-* In the [Keycloak Admin Console](http://localhost:8080/admin) , click on "Create Realm" and give it a name (e.g., app2-realm).
+* In the [Keycloak Admin Console](http://localhost:8080/admin) , click on "Create Realm" and give it a name (e.g., homelab).
 
 #### Create a Client(Clients are applications and services that can request authentication of a user)
 
 * Go to the Clients section and click on "Create"
-* Set the Client ID (e.g., app2-client), Client Protocol to openid-connect
+* Set the Client ID (e.g., restclient), Client Protocol to openid-connect
 * Set the Authentication flow. select "Standard Flow" and "Direct access grants"
 
 #### create roles necessary for the project
 
 * Go to "Realm Roles" section and click on "Create role"
-* create roles (e.g., app2admin-role, app2user-role)
+* create roles (e.g., restclient-admin, restclient-user)
 
 #### Create Users and Assign Roles
 
 * Go to the Users section and create users(test-User1@test.com,test-Admin1@test.com).
 * Assign appropriate roles to the newly created users by editing the user, going to the Role Mappings tab, and assigning the appropriate role(s)
+* Set user password from Credential tab
 
 #### Check user login
 
-* Login to [Keycloak Account console](http://localhost:8080/realms/app2-realm/account)
+* Login to [Keycloak Account console](http://localhost:8080/realms/homelab/account)
 
 ## (optional) Zitadel setup for testing locally
 
@@ -184,7 +185,7 @@ password: Password1!
    Check authorization on Authentication
    ```
 4. In the same project page click the icon "New" to create a new application
-5. Add a name for the new application. eg: webapp and click continue
+5. Add a name for the new application. eg: restclient and click continue
 6. In the authentication method selections page, select  "CODE" and click continue
 7. [Optional] add the "redirectUrl" and click continue (eg redirect url for testing: https://localhost)
 8. Click "create" to finalize the configurations
@@ -203,15 +204,13 @@ password: Password1!
 
 1. Select the project you have created previously and click the "roles" setting from right panel
 2. Select "New" and create a new role with the details for new role
+3. Create two roles (eg: restclient-admin, restclient-user)
    eg:
 
    ```
-   Key: administrator
-   Display name: administrator
-   Group: administrator
+   Key: restclient-admin
+   Display name: admin
    ```
-
-   you can create two roles administrator and users
 
 #### create users and assign user roles
 
@@ -231,12 +230,12 @@ password: Password1!
 #### Generate access token
 
 ```
-curl --location --request POST 'http://localhost:8080/realms/app2-realm/protocol/openid-connect/token' \
+curl --location --request POST 'http://localhost:8080/realms/homelab/protocol/openid-connect/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'username=test-user' \
---data-urlencode 'password=test-user' \
+--data-urlencode 'username=test-User1@test.com' \
+--data-urlencode 'password=test-User1@test.com' \
 --data-urlencode 'grant_type=password' \
---data-urlencode 'client_id=app2-client'
+--data-urlencode 'client_id=restclient'
 ```
 
 #### Access restricted endpoint using bearer token

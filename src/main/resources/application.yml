@@ -11,7 +11,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${authorization.server.issuer-uri}
+          #issuer-uri: ${authorization.server.issuer-uri}
           jwk-set-uri: ${authorization.server.jwk-set-uri}
 cors:
   allowedOrigins: [http://localhost:8881, https://localhost:8881, https://editor.swagger.io]
@@ -33,7 +33,5 @@ logging:
 # custom properties
 authorization:
   server:
-    #issuer-uri: http://<keycloak-host>/realms/app2-realm
-    #jwk-set-uri:  http://<keycloak-host>/realms/app2-realm/protocol/openid-connect/certs
-    issuer-uri: https://zitadel.dev.local
-    jwk-set-uri: http://zitadel.dev.local/oauth/v2/keys
+    #issuer-uri: https://zitadel.dev.local #for keycloak use http://<keycloak-host>/realms/<your-realm>
+    jwk-set-uri: http://zitadel.dev.local/oauth/v2/keys #for keycloak use http://<keycloak-host>/realms/<your-realm>/protocol/openid-connect/certs
