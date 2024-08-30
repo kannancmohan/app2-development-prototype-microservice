@@ -124,7 +124,7 @@ docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:la
 ### Install keycloak(version: 25.0.4) using docker
 
 ```
-docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.4 start-dev
+docker run --detach -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.4 start-dev
 ```
 
 ### Configure Keycloak

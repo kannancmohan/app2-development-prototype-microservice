@@ -1,10 +1,15 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.config;
 
+import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.security.config.http.SessionCreationPolicy.*;
+
 import com.kcm.msp.dev.app2.development.prototype.microservice.properties.CorsProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -12,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -19,6 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity // comment this "To disable springboot-security"
+@EnableMethodSecurity // added to make use of @PreAuthorize and @PostAuthorize
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -38,15 +45,25 @@ public class SecurityConfig {
                     .permitAll()
                     .anyRequest() // authenticate remaining requests
                     .authenticated())
-        // .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-        // Add the Bearer Token filter
-        /*        .oauth2ResourceServer(
-        oauth2 ->
-            oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))*/
         .oauth2ResourceServer(
-            oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()))
-        .httpBasic(Customizer.withDefaults());
+            conf ->
+                conf.jwt(Customizer.withDefaults())
+                    .authenticationEntryPoint(customAuthenticationEntryPoint()))
+        .httpBasic(Customizer.withDefaults())
+        .sessionManagement(
+            session ->
+                session.sessionCreationPolicy(
+                    STATELESS)); // Ensure stateless session for rest api's
     return http.build();
+  }
+
+  @Bean
+  public AuthenticationEntryPoint customAuthenticationEntryPoint() {
+    // replace WWW-Authenticate header content
+    return (request, response, authException) -> {
+      response.addHeader(WWW_AUTHENTICATE, "Bearer realm=\"Restricted Content\"");
+      response.sendError(UNAUTHORIZED.value(), UNAUTHORIZED.getReasonPhrase());
+    };
   }
 
   @Bean
