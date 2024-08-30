@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -91,9 +90,7 @@ public class SecurityConfig {
   // TODO remove this
   @Bean
   public UserDetailsService userDetailsService() {
-    InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
-    UserDetails user = User.withUsername("kannan").password("{noop}kannan").build();
-    userDetailsService.createUser(user);
-    return userDetailsService;
+    return new InMemoryUserDetailsManager(
+        User.withUsername("kannan").password("{noop}kannan").authorities("ROLE_USER").build());
   }
 }
