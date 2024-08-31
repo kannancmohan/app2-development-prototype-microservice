@@ -5,6 +5,10 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
 import com.kcm.msp.dev.app2.development.prototype.microservice.properties.CorsProperty;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +17,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -46,7 +54,8 @@ public class SecurityConfig {
                     .authenticated())
         .oauth2ResourceServer(
             conf ->
-                conf.jwt(Customizer.withDefaults())
+                conf.jwt(
+                        jwtConf -> jwtConf.jwtAuthenticationConverter(jwtAuthenticationConverter()))
                     .authenticationEntryPoint(customAuthenticationEntryPoint()))
         .httpBasic(Customizer.withDefaults())
         .sessionManagement(
@@ -77,15 +86,36 @@ public class SecurityConfig {
     return source;
   }
 
-  //  private JwtAuthenticationConverter jwtAuthenticationConverter() {
-  //    JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
-  //    /*    converter.setAuthoritiesClaimName("roles");
-  //    converter.setAuthorityPrefix("ROLE_");*/
-  //
-  //    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-  //    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(converter);
-  //    return jwtAuthenticationConverter;
-  //  }
+  @Bean
+  public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    final var converter = new JwtAuthenticationConverter();
+    converter.setJwtGrantedAuthoritiesConverter(SecurityConfig::generateKeycloakGrantedAuthorities);
+    return converter;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Collection<GrantedAuthority> generateKeycloakGrantedAuthorities(final Jwt jwt) {
+    final var authorities = new ArrayList<GrantedAuthority>();
+    if (jwt != null && jwt.hasClaim("realm_access")) {
+      final var realmAccess = jwt.getClaimAsMap("realm_access");
+      final var roles =
+          ((List<String>) realmAccess.get("roles"))
+              .stream()
+                  .map(roleName -> "ROLE_" + roleName)
+                  .map(SimpleGrantedAuthority::new)
+                  .toList();
+      authorities.addAll(roles);
+    }
+    if (jwt != null && jwt.hasClaim("scope")) {
+      final var scopes = Arrays.asList(jwt.getClaimAsString("scope").split(" "));
+      authorities.addAll(
+          scopes.stream()
+              .map(scopeName -> "SCOPE_" + scopeName)
+              .map(SimpleGrantedAuthority::new)
+              .toList());
+    }
+    return authorities;
+  }
 
   // TODO remove this
   @Bean
