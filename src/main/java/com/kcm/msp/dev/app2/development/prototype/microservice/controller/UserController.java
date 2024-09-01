@@ -19,6 +19,12 @@ public class UserController implements UserApi {
   private final UserService userService;
 
   @Override
+  public ResponseEntity<User> showUserById(final String userId) {
+    var user = userService.showUserById(userId);
+    return ResponseEntity.status(OK).body(user);
+  }
+
+  @Override
   public ResponseEntity<List<User>> listUsers(final Integer limit) {
     final List<User> users = userService.listUsers(limit);
     return ResponseEntity.status(OK).body(users);

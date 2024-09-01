@@ -1,5 +1,6 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.service.impl;
 
+import com.kcm.msp.dev.app2.development.prototype.microservice.exception.ItemNotFoundException;
 import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.CreateUserRequest;
 import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.User;
 import com.kcm.msp.dev.app2.development.prototype.microservice.service.UserService;
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +26,14 @@ public class UserServiceImpl implements UserService {
                       .name("name" + value)
                       .email("test" + value + "@email.com"))
           .collect(Collectors.toList());
+
+  @Override
+  public User showUserById(final String id) {
+    if (StringUtils.isBlank(id)) {
+      throw new ItemNotFoundException("Item not found");
+    }
+    return new User().id(100L).name("test@user.com").name("test@user.com");
+  }
 
   @Override
   public List<User> listUsers(final Integer limit) {

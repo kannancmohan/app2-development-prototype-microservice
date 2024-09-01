@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface UserService {
 
+  User showUserById(String id);
+
   List<User> listUsers(Integer limit);
 
   User createUser(CreateUserRequest request);

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +37,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+  private static final String KEYCLOAK_ROLES_CLAIM = "realm_access";
+  private static final String ZITADEL_ROLES_CLAIM = "urn:zitadel:iam:org:project:roles";
   private static final String[] WHITELISTED_API_ENDPOINTS = {
     "/pets/**", "/actuator/**", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**"
   };
+  public static final String ROLE_PREFIX = "ROLE_";
 
   private final CorsProperty corsProperty;
 
@@ -89,19 +93,28 @@ public class SecurityConfig {
   @Bean
   public JwtAuthenticationConverter jwtAuthenticationConverter() {
     final var converter = new JwtAuthenticationConverter();
-    converter.setJwtGrantedAuthoritiesConverter(SecurityConfig::generateKeycloakGrantedAuthorities);
+    converter.setJwtGrantedAuthoritiesConverter(SecurityConfig::generateGrantedAuthorities);
     return converter;
   }
 
-  @SuppressWarnings("unchecked")
-  private static Collection<GrantedAuthority> generateKeycloakGrantedAuthorities(final Jwt jwt) {
+  public static Collection<GrantedAuthority> generateGrantedAuthorities(final Jwt jwt) {
     final var authorities = new ArrayList<GrantedAuthority>();
-    if (jwt != null && jwt.hasClaim("realm_access")) {
-      final var realmAccess = jwt.getClaimAsMap("realm_access");
+    // TODO logic for both keycloak & zitadel are implemented. Remove one based on identity-manager
+    generateKeycloakGrantedAuthorities(jwt).ifPresent(authorities::addAll);
+    generateZitadelGrantedAuthorities(jwt).ifPresent(authorities::addAll);
+    return authorities;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static Optional<Collection<GrantedAuthority>> generateKeycloakGrantedAuthorities(
+      final Jwt jwt) {
+    final var authorities = new ArrayList<GrantedAuthority>();
+    if (jwt != null && jwt.hasClaim(KEYCLOAK_ROLES_CLAIM)) {
+      final var realmAccess = jwt.getClaimAsMap(KEYCLOAK_ROLES_CLAIM);
       final var roles =
           ((List<String>) realmAccess.get("roles"))
               .stream()
-                  .map(roleName -> "ROLE_" + roleName)
+                  .map(roleName -> ROLE_PREFIX + roleName)
                   .map(SimpleGrantedAuthority::new)
                   .toList();
       authorities.addAll(roles);
@@ -114,7 +127,21 @@ public class SecurityConfig {
               .map(SimpleGrantedAuthority::new)
               .toList());
     }
-    return authorities;
+    return authorities.isEmpty() ? Optional.empty() : Optional.of(authorities);
+  }
+
+  private static Optional<Collection<GrantedAuthority>> generateZitadelGrantedAuthorities(
+      final Jwt jwt) {
+    final var authorities = new ArrayList<GrantedAuthority>();
+    if (jwt != null && jwt.hasClaim(ZITADEL_ROLES_CLAIM)) {
+      final var roles =
+          jwt.getClaimAsMap(ZITADEL_ROLES_CLAIM).keySet().stream()
+              .map(roleName -> ROLE_PREFIX + roleName)
+              .map(SimpleGrantedAuthority::new)
+              .toList();
+      authorities.addAll(roles);
+    }
+    return authorities.isEmpty() ? Optional.empty() : Optional.of(authorities);
   }
 
   // TODO remove this

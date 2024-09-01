@@ -142,7 +142,7 @@ docker run --detach -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSW
 #### create roles necessary for the project
 
 * Go to "Realm Roles" section and click on "Create role"
-* create roles (e.g., restclient-admin, restclient-user)
+* create roles (e.g., ADMIN_ROLE, USER_ROLE)
 
 #### Create Users and Assign Roles
 
@@ -204,7 +204,7 @@ password: Password1!
 
 1. Select the project you have created previously and click the "roles" setting from right panel
 2. Select "New" and create a new role with the details for new role
-3. Create two roles (eg: restclient-admin, restclient-user)
+3. Create two roles (eg: ADMIN_ROLE, USER_ROLE)
    eg:
 
    ```

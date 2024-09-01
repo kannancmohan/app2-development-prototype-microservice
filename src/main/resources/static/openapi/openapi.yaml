@@ -25,6 +25,8 @@ paths:
       operationId: listUsers
       tags:
         - User
+      x-roles: # roles tag is used purely for documentation purposes
+        - ADMIN_ROLE
       parameters:
         - $ref: '#/components/parameters/limit'
       responses:
@@ -52,6 +54,7 @@ paths:
       security:
         - basic_auth: []
         - bearer_auth: []
+      x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''ADMIN_ROLE'')")'
     post:
       summary: Create a user
       operationId: createUsers
@@ -77,6 +80,37 @@ paths:
       security:
         - basic_auth: []
         - bearer_auth: []
+  /users/{userId}:
+    get:
+      summary: Info for a specific user
+      operationId: showUserById
+      tags:
+        - User
+      x-roles: # roles tag is used purely for documentation purposes
+        - USER_ROLE
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to retrieve
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/UnexpectedError"
+      security:
+        - basic_auth: []
+        - bearer_auth: []
+      x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''USER_ROLE'')")'
+
   /pets:
     get:
       summary: List all pets
