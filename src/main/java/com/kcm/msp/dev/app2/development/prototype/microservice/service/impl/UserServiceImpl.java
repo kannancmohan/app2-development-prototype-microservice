@@ -1,7 +1,6 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.service.impl;
 
 import com.kcm.msp.dev.app2.development.prototype.microservice.exception.ItemNotFoundException;
-import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.CreateUserRequest;
 import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.User;
 import com.kcm.msp.dev.app2.development.prototype.microservice.service.UserService;
 import java.util.List;
@@ -39,14 +38,5 @@ public class UserServiceImpl implements UserService {
   public List<User> listUsers(final Integer limit) {
     Objects.requireNonNull(limit, "Limit cannot be null");
     return SAMPLE_USERS.stream().limit(limit).collect(Collectors.toList());
-  }
-
-  @Override
-  public User createUser(final CreateUserRequest request) {
-    Objects.requireNonNull(request, "CreateUserRequest cannot be null");
-    final User user =
-        new User().id(RANDOM.nextLong()).name(request.getName()).email(request.getEmail());
-    SAMPLE_USERS.add(user);
-    return user;
   }
 }

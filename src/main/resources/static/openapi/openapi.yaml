@@ -19,7 +19,7 @@ tags:
   - name: User
     description: Please use tags name starting with capitals
 paths:
-  /users:
+  /admin/users:
     get:
       summary: List all users
       operationId: listUsers
@@ -54,32 +54,7 @@ paths:
       security:
         - basic_auth: []
         - bearer_auth: []
-      x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''ADMIN_ROLE'')")'
-    post:
-      summary: Create a user
-      operationId: createUsers
-      tags:
-        - User
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserRequest'
-      responses:
-        "200":
-          description: Created User
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "500":
-          $ref: "#/components/responses/UnexpectedError"
-      security:
-        - basic_auth: []
-        - bearer_auth: []
+      #x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''ADMIN_ROLE'')")'
   /users/{userId}:
     get:
       summary: Info for a specific user
@@ -109,8 +84,7 @@ paths:
       security:
         - basic_auth: []
         - bearer_auth: []
-      x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''USER_ROLE'')")'
-
+      #x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''USER_ROLE'') or hasRole(''ADMIN_ROLE'')")'
   /pets:
     get:
       summary: List all pets

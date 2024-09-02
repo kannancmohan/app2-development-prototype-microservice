@@ -1,10 +1,8 @@
 package com.kcm.msp.dev.app2.development.prototype.microservice.controller;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.kcm.msp.dev.app2.development.prototype.microservice.server.api.UserApi;
-import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.CreateUserRequest;
 import com.kcm.msp.dev.app2.development.prototype.microservice.server.models.User;
 import com.kcm.msp.dev.app2.development.prototype.microservice.service.UserService;
 import java.util.List;
@@ -28,11 +26,5 @@ public class UserController implements UserApi {
   public ResponseEntity<List<User>> listUsers(final Integer limit) {
     final List<User> users = userService.listUsers(limit);
     return ResponseEntity.status(OK).body(users);
-  }
-
-  @Override
-  public ResponseEntity<User> createUsers(final CreateUserRequest request) {
-    final User user = userService.createUser(request);
-    return ResponseEntity.status(CREATED).body(user);
   }
 }

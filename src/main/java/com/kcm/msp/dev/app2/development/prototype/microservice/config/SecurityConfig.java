@@ -39,9 +39,14 @@ public class SecurityConfig {
 
   private static final String KEYCLOAK_ROLES_CLAIM = "realm_access";
   private static final String ZITADEL_ROLES_CLAIM = "urn:zitadel:iam:org:project:roles";
-  private static final String[] WHITELISTED_API_ENDPOINTS = {
+  private static final String[] WHITELISTED_ENDPOINTS = {
     "/pets/**", "/actuator/**", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**"
   };
+
+  private static final String[] ADMIN_ENDPOINTS = {"/admin/**"};
+
+  private static final String[] USER_ENDPOINTS = {"/users/**"};
+
   public static final String ROLE_PREFIX = "ROLE_";
 
   private final CorsProperty corsProperty;
@@ -52,8 +57,12 @@ public class SecurityConfig {
         .cors(c -> c.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers(WHITELISTED_API_ENDPOINTS)
+                auth.requestMatchers(WHITELISTED_ENDPOINTS)
                     .permitAll()
+                    .requestMatchers(ADMIN_ENDPOINTS)
+                    .hasRole("ADMIN_ROLE")
+                    .requestMatchers(USER_ENDPOINTS)
+                    .hasAnyRole("ADMIN_ROLE", "USER_ROLE")
                     .anyRequest() // authenticate remaining requests
                     .authenticated())
         .oauth2ResourceServer(
