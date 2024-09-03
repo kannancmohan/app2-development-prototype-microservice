@@ -37,6 +37,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+  private static final String GENERIC_ROLES_CLAIM = "roles";
   private static final String KEYCLOAK_ROLES_CLAIM = "realm_access";
   private static final String ZITADEL_ROLES_CLAIM = "urn:zitadel:iam:org:project:roles";
   private static final String[] WHITELISTED_ENDPOINTS = {
@@ -111,6 +112,7 @@ public class SecurityConfig {
     // TODO logic for both keycloak & zitadel are implemented. Remove one based on identity-manager
     generateKeycloakGrantedAuthorities(jwt).ifPresent(authorities::addAll);
     generateZitadelGrantedAuthorities(jwt).ifPresent(authorities::addAll);
+    generateGenericGrantedAuthorities(jwt).ifPresent(authorities::addAll);
     return authorities;
   }
 
@@ -145,6 +147,20 @@ public class SecurityConfig {
     if (jwt != null && jwt.hasClaim(ZITADEL_ROLES_CLAIM)) {
       final var roles =
           jwt.getClaimAsMap(ZITADEL_ROLES_CLAIM).keySet().stream()
+              .map(roleName -> ROLE_PREFIX + roleName)
+              .map(SimpleGrantedAuthority::new)
+              .toList();
+      authorities.addAll(roles);
+    }
+    return authorities.isEmpty() ? Optional.empty() : Optional.of(authorities);
+  }
+
+  private static Optional<Collection<GrantedAuthority>> generateGenericGrantedAuthorities(
+      final Jwt jwt) {
+    final var authorities = new ArrayList<GrantedAuthority>();
+    if (jwt != null && jwt.hasClaim(GENERIC_ROLES_CLAIM)) {
+      final var roles =
+          jwt.getClaimAsStringList(GENERIC_ROLES_CLAIM).stream()
               .map(roleName -> ROLE_PREFIX + roleName)
               .map(SimpleGrantedAuthority::new)
               .toList();
