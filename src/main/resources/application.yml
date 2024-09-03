@@ -4,9 +4,15 @@ server:
 spring:
   application:
     name: app2-development-prototype-microservice
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          #issuer-uri: ${authorization.server.issuer-uri}
+          jwk-set-uri: ${authorization.server.jwk-set-uri}
 cors:
   allowedOrigins: [http://localhost:8881, https://localhost:8881, https://editor.swagger.io]
   allowedMethods: [GET, POST, PUT, DELETE, OPTIONS]
@@ -24,3 +30,8 @@ logging:
       springframework:
         boot.autoconfigure: WARN
         security: WARN
+# custom properties
+authorization:
+  server:
+    #issuer-uri: https://zitadel.dev.local #for keycloak use http://<keycloak-host>/realms/<your-realm>
+    jwk-set-uri: http://zitadel.dev.local/oauth/v2/keys #for keycloak use http://<keycloak-host>/realms/<your-realm>/protocol/openid-connect/certs

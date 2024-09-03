@@ -19,12 +19,14 @@ tags:
   - name: User
     description: Please use tags name starting with capitals
 paths:
-  /users:
+  /admin/users:
     get:
       summary: List all users
       operationId: listUsers
       tags:
         - User
+      x-roles: # roles tag is used purely for documentation purposes
+        - ADMIN_ROLE
       parameters:
         - $ref: '#/components/parameters/limit'
       responses:
@@ -51,30 +53,38 @@ paths:
           $ref: "#/components/responses/UnexpectedError"
       security:
         - basic_auth: []
-    post:
-      summary: Create a user
-      operationId: createUsers
+        - bearer_auth: []
+      #x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''ADMIN_ROLE'')")'
+  /users/{userId}:
+    get:
+      summary: Info for a specific user
+      operationId: showUserById
       tags:
         - User
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+      x-roles: # roles tag is used purely for documentation purposes
+        - USER_ROLE
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to retrieve
+          schema:
+            type: string
       responses:
         "200":
-          description: Created User
+          description: Expected response to a valid request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/UnexpectedError"
       security:
         - basic_auth: []
+        - bearer_auth: []
+      #x-operation-extra-annotation: '@org.springframework.security.access.prepost.PreAuthorize("hasRole(''USER_ROLE'') or hasRole(''ADMIN_ROLE'')")'
   /pets:
     get:
       summary: List all pets
@@ -294,3 +304,7 @@ components:
     basic_auth:
       type: http
       scheme: basic
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
