@@ -112,3 +112,4 @@ docker run -d -p 8881:8881 kannan2024/app2-development-prototype-microservice:la
 ## spring actuator
 
         http://localhost:8881/actuator/health
+
