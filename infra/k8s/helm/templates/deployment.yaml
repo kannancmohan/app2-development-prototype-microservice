@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app2-development-prototype-microservice
+    version: 0.0.1-SNAPSHOT
+    app.kubernetes.io/name: app2-development-prototype-microservice
+    app.kubernetes.io/version: 0.0.1-SNAPSHOT
+  name: app2-development-prototype-microservice
+spec:
+  replicas: 1
+  #revisionHistoryLimit: 2 #number of old ReplicaSets (deployments' revisions) to retain
+  selector:
+    matchLabels:
+      app: app2-development-prototype-microservice
+      app.kubernetes.io/name: app2-development-prototype-microservice
+  template:
+    metadata:
+      labels:
+        app: app2-development-prototype-microservice
+        version: 0.0.1-SNAPSHOT
+        app.kubernetes.io/name: app2-development-prototype-microservice
+        app.kubernetes.io/version: 0.0.1-SNAPSHOT
+      name: app2-development-prototype-microservice
+    spec:
+      containers:
+        - env:
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          name: app2-development-prototype-microservice
+          image: kannan2024/app2-development-prototype-microservice:0.0.1-SNAPSHOT
+          imagePullPolicy: Always
+          imagePullSecrets:
+            - name: docker-registry-secret
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8881
+              scheme: HTTP
+            initialDelaySeconds: 180
+            successThreshold: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8881
+              scheme: HTTP
+            initialDelaySeconds: 10
+            successThreshold: 1
+          securityContext:
+            privileged: false
