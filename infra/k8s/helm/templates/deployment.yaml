@@ -37,8 +37,6 @@ spec:
           name: app2-development-prototype-microservice
           image: kannan2024/app2-development-prototype-microservice:0.0.1-SNAPSHOT
           imagePullPolicy: Always
-          imagePullSecrets:
-            - name: docker-registry-secret
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -57,3 +55,5 @@ spec:
             successThreshold: 1
           securityContext:
             privileged: false
+      imagePullSecrets:
+        - name: docker-registry-secret
