@@ -3,29 +3,29 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}
+    app: {{ .Chart.Name }}
     version: 0.0.1-SNAPSHOT
-    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
     app.kubernetes.io/version: 0.0.1-SNAPSHOT
-  name: {{ .Release.Name }}
+  name: {{ .Release.Name }}-app
 spec:
   replicas: 1
   #revisionHistoryLimit: 2 #number of old ReplicaSets (deployments' revisions) to retain
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
-      app.kubernetes.io/name: {{ .Release.Name }}
+      app: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: {{ .Chart.Name }}
         version: 0.0.1-SNAPSHOT
-        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ .Chart.Name }}
         app.kubernetes.io/version: 0.0.1-SNAPSHOT
-      name: {{ .Release.Name }}
+      #name: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Release.Name }}
+        - name: {{ .Release.Name }}-container
           image: kannan2024/app2-development-prototype-microservice:0.0.1-SNAPSHOT
           imagePullPolicy: Always
           livenessProbe:
