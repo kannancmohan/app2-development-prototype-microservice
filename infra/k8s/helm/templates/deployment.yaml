@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: {{ .Release.Name }}-container
-          image: kannan2024/app2-development-prototype-microservice:{{ .Chart.appVersion }}
+          image: "kannan2024/app2-development-prototype-microservice:{{ .Chart.AppVersion }}
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
