@@ -23,7 +23,19 @@ management:
     enabled-by-default: true # set to false to disable all endpoints
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram: # Whether metrics with following name(eg: http.server.requests) should publish percentile histograms
+        http:
+          server:
+            requests: 'true' # enabling this to generate histogram metrics for http request
+    tags: # adds tag to each prometheus metric
+      application: app2-microservice
+      #application_name: app2-microservice #
+#  observations:
+#    key-values:
+#      application: fraud-detection
 logging:
   level:
     org:

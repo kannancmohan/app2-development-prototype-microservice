@@ -192,7 +192,7 @@ public class SecurityConfigIntegrationTest {
     }
   }
 
-  private String getBaseUrl(String endpoint) {
+  private String getBaseUrl(final String endpoint) {
     return "http://localhost:" + port + endpoint;
   }
 }
