@@ -26,7 +26,7 @@ management:
         include: health,info,metrics,prometheus
   metrics:
     distribution:
-      percentiles-histogram: # Whether meter IDs with following name should publish percentile histograms
+      percentiles-histogram: # Whether metrics with following name(eg: http.server.requests) should publish percentile histograms
         http:
           server:
             requests: 'true' # enabling this to generate histogram metrics for http request
