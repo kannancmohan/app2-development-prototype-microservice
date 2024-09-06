@@ -30,8 +30,9 @@ management:
         http:
           server:
             requests: 'true' # enabling this to generate histogram metrics for http request
-    tags:
-      application: app2-microservice # adds tag to each prometheus metric
+    tags: # adds tag to each prometheus metric
+      application: app2-microservice
+      #application_name: app2-microservice #
 #  observations:
 #    key-values:
 #      application: fraud-detection
