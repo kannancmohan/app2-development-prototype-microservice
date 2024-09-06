@@ -7,6 +7,7 @@ metadata:
   labels:
     release: {{ .Release.Name }}
 spec:
+  jobLabel: {{ .Release.Name }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}  # Ensure this matches the app's label

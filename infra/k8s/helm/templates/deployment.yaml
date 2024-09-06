@@ -17,10 +17,10 @@ spec:
       app.kubernetes.io/name: {{ .Release.Name }}
   template:
     metadata:
-      annotations:
-        prometheus.io/path: /actuator/prometheus
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "{{ .Values.appPort }}"
+#      annotations:
+#        prometheus.io/path: /actuator/prometheus
+#        prometheus.io/scrape: "true"
+#        prometheus.io/port: "{{ .Values.appPort }}"
       labels:
         app: {{ .Release.Name }}
         version: {{ .Chart.Version }}
