@@ -41,7 +41,7 @@ logging:
     org:
       springframework:
         boot.autoconfigure: WARN
-        security: TRACE
+        security: WARN
 # custom properties
 authorization:
   server:
