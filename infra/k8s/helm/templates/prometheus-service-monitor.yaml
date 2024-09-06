@@ -9,10 +9,10 @@ metadata:
 spec:
   jobLabel: {{ .Release.Name }}
   selector:
-    matchLabels:
-      app: {{ .Release.Name }}  # Ensure this matches the app's label
+    matchLabels: # This should match the labels defined in Service resource
+      app: {{ .Release.Name }}
   endpoints:
-    - port: http # Name of the port defined in your app's service
+    - port: http # Name of the port defined in Service resource
       path: /actuator/prometheus
       interval: 30s
   namespaceSelector:
