@@ -3,9 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ .Release.Name }}
     version: {{ .Chart.Version }}
-    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ .Release.Name }}
     app.kubernetes.io/version: {{ .Chart.Version }}
   name: {{ .Release.Name }}-app
 spec:
@@ -13,8 +13,8 @@ spec:
   #revisionHistoryLimit: 2 #number of old ReplicaSets (deployments' revisions) to retain
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-      app.kubernetes.io/name: {{ .Chart.Name }}
+      app: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ .Release.Name }}
   template:
     metadata:
       annotations:
@@ -22,9 +22,9 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.appPort }}"
       labels:
-        app: {{ .Chart.Name }}
+        app: {{ .Release.Name }}
         version: {{ .Chart.Version }}
-        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/name: {{ .Release.Name }}
         app.kubernetes.io/version: {{ .Chart.Version }}
       #name: {{ .Release.Name }}
     spec:
