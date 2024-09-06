@@ -11,5 +11,6 @@ spec:
   selector:
     app: {{ .Release.Name }}
   ports:
-    - port: {{ .Values.appPort }}
+    - name: http
+      port: {{ .Values.appPort }}
       targetPort: {{ .Values.appPort }}
