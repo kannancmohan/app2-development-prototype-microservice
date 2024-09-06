@@ -4,9 +4,9 @@ kind: Deployment
 metadata:
   labels:
     app: {{ .Chart.Name }}
-    version: 0.0.1-SNAPSHOT
+    version: {{ .Chart.Version }}
     app.kubernetes.io/name: {{ .Chart.Name }}
-    app.kubernetes.io/version: 0.0.1-SNAPSHOT
+    app.kubernetes.io/version: {{ .Chart.Version }}
   name: {{ .Release.Name }}-app
 spec:
   replicas: 1
@@ -19,14 +19,14 @@ spec:
     metadata:
       labels:
         app: {{ .Chart.Name }}
-        version: 0.0.1-SNAPSHOT
+        version: {{ .Chart.Version }}
         app.kubernetes.io/name: {{ .Chart.Name }}
-        app.kubernetes.io/version: 0.0.1-SNAPSHOT
+        app.kubernetes.io/version: {{ .Chart.Version }}
       #name: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Release.Name }}-container
-          image: kannan2024/app2-development-prototype-microservice:0.0.1-SNAPSHOT
+          image: kannan2024/app2-development-prototype-microservice:{{ .Chart.Version }}
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
