@@ -1,4 +1,6 @@
-# Observability (logs, metrics, and traces)
+# Observability-Metrics
+
+![High Level arch diagram](./images/springboot_observablity-metrics.jpg "Observability-Metrics")
 
 ## Prerequisites
 
