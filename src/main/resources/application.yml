@@ -37,9 +37,9 @@ management:
     enabled: true
     sampling:
       probability: 1.0 # Set it to 1.0 to send every request to tracing backend. Spring by default, samples only 10% of requests to prevent overwhelming the tracing backend.
-  otlp:
+  otlp: # https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/out-of-the-box-instrumentation/
     tracing:
-      endpoint: http://tempo.tempo.svc.cluster.local:4318/v1/traces
+      endpoint: http://tempo.tempo.svc.cluster.local:4318/v1/traces #tempo grpc endpoint
     metrics:
       export:
         enabled: false # disabling exporting of metrics, as we are already scraping these metrics using prometheus. so exporting is irrelevant here
@@ -47,6 +47,8 @@ management:
 #    key-values:
 #      application: fraud-detection
 logging:
+#  pattern:
+#    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     org:
       springframework:

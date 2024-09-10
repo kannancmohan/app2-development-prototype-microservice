@@ -99,10 +99,16 @@
       <artifactId>spring-boot-starter-webflux</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- added for testing observability -->
+    <!-- added for testing observability (metrics)-->
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-observation-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- added for testing observability (tracing)-->
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-sdk-testing</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
