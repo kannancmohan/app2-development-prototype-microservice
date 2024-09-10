@@ -40,35 +40,51 @@
 
 ```
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  metrics:
-    distribution:
-      percentiles-histogram:
-        http:
-          server:
-            requests: 'true'
-    tags:
-      application: app2-microservice
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://tempo.tempo.svc.cluster.local:4318/v1/traces #tempo grpc endpoint
+    metrics:
+      export:
+        enabled: false # disabling exporting of metrics
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 ```
 
 3. Add custom configuration class to skip tracing of actuator endpoints
 
 ```
+  @Bean
+  @ConditionalOnProperty("management.tracing.enabled")
+  public ObservationRegistryCustomizer<ObservationRegistry> skipActuatorEndpointsFromObservation() {
+    log.debug("Using custom skipActuatorEndpointsFromObservation bean to skip actuator endpoints");
+    final var pathMatcher = new AntPathMatcher("/");
+    return registry ->
+        registry.observationConfig().observationPredicate(observationPredicate(pathMatcher));
+  }
 
+  private ObservationPredicate observationPredicate(final PathMatcher pathMatcher) {
+    return (observationName, context) -> {
+      if (context instanceof ServerRequestObservationContext observationContext) {
+        return !pathMatcher.match("/actuator/**", observationContext.getCarrier().getRequestURI());
+      } else {
+        return false;
+      }
+    };
+  }
 ```
 
 ### Troubleshooting & Testing the tracing in grafana
 
-### Check metrics in grafana ui
+### Check Traces for an App in grafana ui
 
 ```
 login to grafana ui select 'Explore' from main menu
-select '' as the source 
-In the label filters drope-down select 'application' 
-After selecting 'application' the adjacent drope-down will list the available apps
-select your app name and execute click 'Run Query' to see results  
+select 'Tempo' as the source 
+select 'search' tab and from 'Service Name' drope-down select the appropriate app and click 'Run Query'
 ```
 

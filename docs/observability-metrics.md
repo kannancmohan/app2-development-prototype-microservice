@@ -108,7 +108,7 @@ You should see some result
 
 ```
 login to grafana ui select 'Explore' from main menu
-select '' as the source 
+select 'Prometheus' as the source 
 In the label filters drope-down select 'application' 
 After selecting 'application' the adjacent drope-down will list the available apps
 select your app name and execute click 'Run Query' to see results  

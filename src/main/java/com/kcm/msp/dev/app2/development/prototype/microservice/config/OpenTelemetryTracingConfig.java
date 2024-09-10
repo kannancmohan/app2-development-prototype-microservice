@@ -18,7 +18,7 @@ public class OpenTelemetryTracingConfig {
   @Bean
   @ConditionalOnProperty("management.tracing.enabled")
   public ObservationRegistryCustomizer<ObservationRegistry> skipActuatorEndpointsFromObservation() {
-    log.info("Using custom skipActuatorEndpointsFromObservation bean to skip actuator endpoints");
+    log.debug("Using custom skipActuatorEndpointsFromObservation bean to skip actuator endpoints");
     final var pathMatcher = new AntPathMatcher("/");
     return registry ->
         registry.observationConfig().observationPredicate(observationPredicate(pathMatcher));
