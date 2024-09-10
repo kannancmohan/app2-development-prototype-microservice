@@ -1,16 +1,17 @@
-# Observability-Metrics
+# Observability-Tracing
 
-![High Level arch diagram](./images/springboot_observablity-metrics.jpg "Observability-Metrics")
+![High Level arch diagram](./images/springboot_observablity-metrics.jpg "Observability-Tracing")
 
 ## Prerequisites
 
-* prometheus server
+* Tempo server
+* Grafana
 
-## Metrics setup for springboot3
+## Traces setup for springboot3
 
 ### Application configuration
 
-1. Add spring-boot-starter-actuator, micrometer-registry-prometheus & micrometer-observation-test dependencies to pom.xml
+1. Add micrometer-tracing-bridge-otel to pom.xml
 
 <table style='font-family:"Courier New", Courier, monospace; font-size:100%'>
     <tr>
@@ -21,20 +22,17 @@
         <th>Description</th>
     </tr>
     <tr>
-        <td>spring-boot-starter-actuator</td>
-        <td>To expose metrics endpoints</td>
+        <td>micrometer-tracing-bridge-otel</td>
+        <td>Used to bridge Micrometer’s tracing functionality with OpenTelemetry. It allows you to continue using Micrometer for instrumentation while exporting tracing data to OpenTelemetry</td>
     </tr>
     <tr>
-        <td>micrometer-registry-prometheus</td>
-        <td>Allows you to expose metrics data in the Prometheus format, which can then be scraped by Prometheus</td>
+        <td>opentelemetry-exporter-otlp</td>
+        <td>Used to export telemetry data(traces, metrics & logs) to OpenTelemetry Collector or directly to a backend that supports the OpenTelemetry otlp Protocol.
+         Few backend that supports otlp are Loki, Tempo, Jaeger, Zipkin, Prometheus, Elasticsearch etc.</td>
     </tr>
     <tr>
-        <td>(Optional) micrometer-registry-influx</td>
-        <td>Use this, in case you use influx. This dependency send metrics data to InfluxDB</td>
-    </tr>
-    <tr>
-        <td>micrometer-observation-test</td>
-        <td>For testing. Eg for checking whether an 'Observation' is invoked on incoming http request</td>
+        <td>micrometer-tracing-integration-test</td>
+        <td>For integration testing</td>
     </tr>
 </table>
 

@@ -33,6 +33,16 @@ management:
     tags: # adds tag to each prometheus metric
       application: app2-microservice
       #application_name: app2-microservice #
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0 # Set it to 1.0 to send every request to tracing backend. Spring by default, samples only 10% of requests to prevent overwhelming the tracing backend.
+  otlp:
+    tracing:
+      endpoint: http://tempo.tempo.svc.cluster.local:4318/v1/traces
+    metrics:
+      export:
+        enabled: false # disabling exporting of metrics, as we are already scraping these metrics using prometheus. so exporting is irrelevant here
 #  observations:
 #    key-values:
 #      application: fraud-detection
