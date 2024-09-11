@@ -25,7 +25,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-    <!-- "To disable springboot-security" disable the following dependency -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
@@ -76,7 +75,14 @@
       <groupId>io.opentelemetry</groupId>
       <artifactId>opentelemetry-exporter-otlp</artifactId>
     </dependency>
-    <!-- test -->
+    <!-- observability logging -->
+    <dependency>
+      <!-- OpenTelemetry logback appender to add trace & span info to standard log-->
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-logback-mdc-1.0</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- TEST DEPENDENCIES -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
