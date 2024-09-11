@@ -5,7 +5,6 @@ Logging can be implemented
 1. Using a scraping agent (eg grafana-promtail, Fluentd, FluentBit).
 
 2. Using OTEL exporter to directly export logs to Log aggregation system like Loki, Elastic, Splunk etc
-   ![High Level arch diagram](./images/springboot_observablity-tracing.jpg "Observability-Logging")
 
 ## Option 1: Using promtail agent to scrap logs from apps and pushing them to Loki
 
@@ -54,7 +53,27 @@ Logging can be implemented
 </configuration>
 ```
 
-### Checking app logs in grafana ui
+### Checking logs in grafana ui
+
+```
+login to grafana ui select 'Explore' from main menu
+select 'Loki' as the source 
+In 'Label filters' section, select 'app' from 'Select Label' drope-down and select your app-name from 'Select value' drope-down
+Execute 'Run Query'
+```
+
+## Option 2: Using OTEL exporter to push logs to Loki
+
+![High Level arch diagram](./images/springboot_observablity-logging-with-promtail.jpg "Observability-Logging")
+
+### Prerequisites
+
+* Grafana
+* Loki
+
+### Application configuration
+
+### Checking logs in grafana ui
 
 ```
 login to grafana ui select 'Explore' from main menu
