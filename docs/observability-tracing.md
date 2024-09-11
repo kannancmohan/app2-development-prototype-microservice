@@ -11,7 +11,7 @@
 
 ### Application configuration
 
-1. Add micrometer-tracing-bridge-otel to pom.xml
+1. Add micrometer-tracing-bridge-otel, opentelemetry-exporter-otlp and opentelemetry-sdk-testing to pom.xml
 
 <table style='font-family:"Courier New", Courier, monospace; font-size:100%'>
     <tr>
