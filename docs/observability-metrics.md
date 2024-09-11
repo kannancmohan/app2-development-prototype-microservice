@@ -52,7 +52,8 @@ management:
         http:
           server:
             requests: 'true'
-    tags:
+  observations:
+    key-values:
       application: app2-microservice
 ```
 

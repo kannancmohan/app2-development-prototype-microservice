@@ -30,9 +30,9 @@ management:
         http:
           server:
             requests: 'true' # enabling this to generate histogram metrics for http request
-    tags: # adds tag to each prometheus metric
-      application: app2-microservice
-      #application_name: app2-microservice #
+#    tags: # adds tag to each prometheus metric
+#      application: app2-microservice
+#      #application_name: app2-microservice #
   tracing:
     enabled: true
     sampling:
@@ -43,15 +43,14 @@ management:
     metrics:
       export:
         enabled: false # disabling exporting of metrics, as we are already scraping these metrics using prometheus. so exporting is irrelevant here
-#  observations:
-#    key-values:
-#      application: fraud-detection
+  observations:
+    key-values: # to add custom key-values(tags) to both metrics and tracing spans
+      application: app2-microservice
 logging:
-#  pattern:
-#    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   level:
     org:
       springframework:
+        web.servlet.DispatcherServlet: WARN
         boot.autoconfigure: WARN
         security: WARN
 # custom properties

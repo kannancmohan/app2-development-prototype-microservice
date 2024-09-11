@@ -1,6 +1,6 @@
 # Observability-Tracing
 
-![High Level arch diagram](./images/springboot_observablity-metrics.jpg "Observability-Tracing")
+![High Level arch diagram](./images/springboot_observablity-tracing.jpg "Observability-Tracing")
 
 ## Prerequisites
 
@@ -49,10 +49,10 @@ management:
       endpoint: http://tempo.tempo.svc.cluster.local:4318/v1/traces #tempo grpc endpoint
     metrics:
       export:
-        enabled: false # disabling exporting of metrics
-logging:
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+        enabled: false
+  observations:
+    key-values:
+      application: app2-microservice
 ```
 
 3. Add custom configuration class to skip tracing of actuator endpoints
