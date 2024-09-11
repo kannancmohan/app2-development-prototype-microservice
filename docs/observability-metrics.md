@@ -11,7 +11,33 @@
 ### Application configuration
 
 1. Add spring-boot-starter-actuator, micrometer-registry-prometheus & micrometer-observation-test dependencies to pom.xml
-   micrometer-registry-prometheus is used to export metrics collected by Micrometer to Prometheus
+
+<table style='font-family:"Courier New", Courier, monospace; font-size:100%'>
+    <tr>
+        <th colspan="2">Dependencies</th>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>spring-boot-starter-actuator</td>
+        <td>To expose metrics endpoints</td>
+    </tr>
+    <tr>
+        <td>micrometer-registry-prometheus</td>
+        <td>Allows you to expose metrics data in the Prometheus format, which can then be scraped by Prometheus</td>
+    </tr>
+    <tr>
+        <td>(Optional) micrometer-registry-influx</td>
+        <td>Use this, in case you use influx. This dependency send metrics data to InfluxDB</td>
+    </tr>
+    <tr>
+        <td>micrometer-observation-test</td>
+        <td>For testing. Eg for checking whether an 'Observation' is invoked on incoming http request</td>
+    </tr>
+</table>
+
 2. Update the application.xml
 
 ```
@@ -26,7 +52,8 @@ management:
         http:
           server:
             requests: 'true'
-    tags:
+  observations:
+    key-values:
       application: app2-microservice
 ```
 
@@ -82,7 +109,7 @@ You should see some result
 
 ```
 login to grafana ui select 'Explore' from main menu
-select '' as the source 
+select 'Prometheus' as the source 
 In the label filters drope-down select 'application' 
 After selecting 'application' the adjacent drope-down will list the available apps
 select your app name and execute click 'Run Query' to see results  

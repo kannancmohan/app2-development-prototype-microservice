@@ -101,7 +101,7 @@ password: Password1!
    eg:
 
    ```
-   Key: restclient-admin
+   Key: ADMIN_ROLE
    Display name: admin
    ```
 
