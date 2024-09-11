@@ -1,12 +1,20 @@
 # Observability-Logging
 
-![High Level arch diagram](./images/springboot_observablity-tracing.jpg "Observability-Logging")
+Logging can be implemented
 
-## Prerequisites
+1. Using a scraping agent (eg grafana-promtail, Fluentd, FluentBit).
+   
+2. Using OTEL exporter to directly export logs to Log aggregation system like Loki, Elastic, Splunk etc
+   ![High Level arch diagram](./images/springboot_observablity-tracing.jpg "Observability-Logging")
+
+## Option 1: Using promtail agent to scrap logs from apps and pushing them to Loki
+![High Level arch diagram](./images/springboot_observablity-logging-with-promtail.jpg "Observability-Logging with Promtail agent")
+
+### Prerequisites
 
 * Grafana
-
-## Traces setup for springboot3
+* Promtail
+* Loki
 
 ### Application configuration
 
@@ -45,7 +53,7 @@
 </configuration>
 ```
 
-### Check Traces for an App in grafana ui
+### Checking app logs in grafana ui
 
 ```
 login to grafana ui select 'Explore' from main menu
