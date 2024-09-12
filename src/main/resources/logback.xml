@@ -9,6 +9,10 @@
   <appender name="OTEL_STDOUT" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
     <appender-ref ref="STDOUT" />
   </appender>
+  <appender name="OTEL_EXTERNAL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+    <captureExperimentalAttributes>true</captureExperimentalAttributes>
+    <captureKeyValuePairAttributes>true</captureKeyValuePairAttributes>
+  </appender>
   <!--  <springProfile name="dev">
       <root level="DEBUG">
         <appender-ref ref="OTEL" />
@@ -16,5 +20,6 @@
     </springProfile>-->
   <root level="info">
     <appender-ref ref="OTEL_STDOUT" />
+    <appender-ref ref="OTEL_EXTERNAL" />
   </root>
 </configuration>
