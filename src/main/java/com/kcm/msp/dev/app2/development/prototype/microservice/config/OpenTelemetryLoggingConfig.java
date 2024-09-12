@@ -52,7 +52,7 @@ public class OpenTelemetryLoggingConfig {
 
   @Bean
   public LogRecordProcessor otelLogRecordProcessor() {
-    // use OtlpHttpLogRecordExporter or OtlpHttpLogRecordExporter depending on the protocol backend supports
+    // use OtlpHttpLogRecordExporter or OtlpHttpLogRecordExporter based on backend system
     return BatchLogRecordProcessor.builder(
             OtlpHttpLogRecordExporter.builder()
                 .setEndpoint(
