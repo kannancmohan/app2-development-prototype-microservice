@@ -2,9 +2,11 @@
 
 Logging can be implemented
 
-1. Using a scraping agent (eg grafana-promtail, Fluentd, FluentBit).
+Option 1: Using a scraping agent (eg grafana-promtail, Fluentd, FluentBit).
 
-2. Using OTEL exporter to directly export logs to Log aggregation system like Loki, Elastic, Splunk etc
+Option 2: Using OTEL exporter to directly export logs to Log aggregation system like Loki, Elastic, Splunk etc
+
+Note: This code base implements option1 and a sample implementation for option2 can be found in [github branch](https://github.com/kannancmohan/app2-development-prototype-microservice/tree/opentele-logging-external)
 
 ## Option 1: Using promtail agent to scrap logs from apps and pushing them to Loki
 
@@ -65,7 +67,7 @@ Execute 'Run Query'
 
 ## Option 2: Using OTEL exporter to push logs to Loki
 
-![High Level arch diagram](./images/springboot_observablity-logging-with-promtail.jpg "Observability-Logging")
+![High Level arch diagram](./images/springboot_observablity-logging-with-otlp-exporter.jpg "Observability-Logging")
 
 ### Prerequisites
 
@@ -88,6 +90,15 @@ Execute 'Run Query'
         <td>opentelemetry-logback-appender-1.0</td>
         <td>A Logback appender that automatically sends logs to an OpenTelemetry-compatible backend</td>
     </tr>
+    <tr>
+        <td>(Optional- Add if already missing in pom)opentelemetry-exporter-otlp</td>
+        <td>Used to export telemetry data(traces, metrics & logs) to OpenTelemetry Collector or directly to a backend that supports otlp</td>
+    </tr>
+    <tr>
+        <td>(Optional- Add this when exporting only logs)opentelemetry-exporter-otlp-logs</td>
+        <td>Used to export logs to OpenTelemetry Collector or directly to a backend log server that supports otlp</td>
+    </tr>
+
 </table>
 
 2. Add custom configuration
