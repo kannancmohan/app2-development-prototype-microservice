@@ -93,7 +93,7 @@ Execute 'Run Query'
 2. Add custom configuration
 
 ```
-@Bean
+  @Bean
   public OpenTelemetry openTelemetry(
       final SdkLoggerProvider sdkLoggerProvider,
       final SdkTracerProvider sdkTracerProvider,
@@ -113,7 +113,7 @@ Execute 'Run Query'
       final Environment environment, final ObjectProvider<LogRecordProcessor> logRecordProcessors) {
     final var applicationName = environment.getProperty("spring.application.name", "application");
     final Resource springResource =
-        Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, applicationName));
+        Resource.create(Attributes.of(AttributeKey.stringKey("service.name"), applicationName));
     final SdkLoggerProviderBuilder builder =
         SdkLoggerProvider.builder().setResource(Resource.getDefault().merge(springResource));
     logRecordProcessors.orderedStream().forEach(builder::addLogRecordProcessor);
@@ -122,9 +122,11 @@ Execute 'Run Query'
 
   @Bean
   public LogRecordProcessor otelLogRecordProcessor() {
+    // use OtlpHttpLogRecordExporter or OtlpHttpLogRecordExporter based on backend system
     return BatchLogRecordProcessor.builder(
-            OtlpGrpcLogRecordExporter.builder()
-                .setEndpoint("http://localhost:9095/v1/logs") // grpc enpoint of external log server
+            OtlpHttpLogRecordExporter.builder()
+                .setEndpoint(
+                    "http://localhost:3100/otlp/v1/logs") // enpoint of external log server
                 .build())
         .build();
   }
