@@ -34,7 +34,7 @@ Logging can be implemented
     </tr>
 </table>
 
-2. Update /src/main/resources/logback.xml 
+2. Update /src/main/resources/logback.xml
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
