@@ -6,7 +6,7 @@
     </encoder>
   </appender>
 
-  <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
+  <appender name="OTEL_STDOUT" class="io.opentelemetry.instrumentation.logback.mdc.v1_0.OpenTelemetryAppender">
     <appender-ref ref="STDOUT" />
   </appender>
   <!--  <springProfile name="dev">
@@ -15,6 +15,6 @@
       </root>
     </springProfile>-->
   <root level="info">
-    <appender-ref ref="OTEL" />
+    <appender-ref ref="OTEL_STDOUT" />
   </root>
 </configuration>
