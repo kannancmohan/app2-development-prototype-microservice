@@ -1,7 +1,8 @@
-# app2-development-prototype-microservice
+# app2-development-prototype-microservice:
 
-        Springboot3 microservice implementation using api first approach. 
-        Project uses OpenApi(openapi-generator-maven-plugin) to generate client and server stub for given openapi spec.
+## Springboot microservice implementation using api first approach.
+
+![High Level arch diagram](./docs/images/springboot3_app_arch.jpg "Springboot3 rest application")
 
 ## App tested with
 
