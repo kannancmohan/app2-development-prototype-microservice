@@ -1,5 +1,9 @@
 ---
 replicas: 1
+image:
+  repository: kannan2024/app2-development-prototype-microservice
+  pullPolicy: Always
+  tag: "latest"
 appPort: 8881
 monitoring:
   enabled: true
