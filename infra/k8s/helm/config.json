@@ -1,6 +1,6 @@
 {
   "app": {
-    "enabled": "true",
+    "enabled": "false",
     "name": "app2-microservice",
     "nameSpace": "app2-microservice",
     "syncWave": "0"
